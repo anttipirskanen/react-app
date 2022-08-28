@@ -1,0 +1,104 @@
+/***Override Bootstrap variables***/
+
+$theme-colors: (
+    primary: #0d6efd,
+    secondary: #6d6d6d,
+    success: #198754,
+    info: #0dcaf0,
+    warning: #ffc107,
+    danger: #dc3545,
+    light: #f8f9fa,
+    dark: #212529
+);
+
+$input-btn-focus-width: 0.1rem;
+
+/***Import only required parts of the Bootstrap***/
+
+//@import '~bootstrap/scss/mixins/banner';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/maps';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/utilities';
+@import '~bootstrap/scss/root';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/type';
+//@import '~bootstrap/scss/images';
+@import '~bootstrap/scss/containers';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/transitions';
+//@import '~bootstrap/scss/dropdown';
+//@import '~bootstrap/scss/button-group';
+@import '~bootstrap/scss/nav';
+@import '~bootstrap/scss/navbar';
+//@import '~bootstrap/scss/card';
+//@import '~bootstrap/scss/accordion';
+//@import '~bootstrap/scss/breadcrumb';
+//@import '~bootstrap/scss/pagination';
+//@import '~bootstrap/scss/badge';
+//@import '~bootstrap/scss/alert';
+//@import '~bootstrap/scss/progress';
+//@import '~bootstrap/scss/list-group';
+@import '~bootstrap/scss/close';
+//@import '~bootstrap/scss/toasts';
+@import '~bootstrap/scss/modal';
+//@import '~bootstrap/scss/tooltip';
+//@import '~bootstrap/scss/popover';
+//@import '~bootstrap/scss/carousel';
+@import '~bootstrap/scss/spinners';
+@import '~bootstrap/scss/offcanvas';
+@import '~bootstrap/scss/placeholders';
+@import '~bootstrap/scss/helpers';
+@import '~bootstrap/scss/utilities/api';
+
+/***Further Bootstrap customization***/
+
+.btn {
+    & + .btn {
+        margin-left: 1rem;
+    }
+
+    svg + span {
+        margin-left: 0.2rem;
+    }
+}
+
+.offcanvas {
+    .navbar-nav {
+        a {
+            margin-top: 0.2rem;
+            margin-bottom: 0.2rem;
+            padding: 1rem;
+            margin-left: 1rem;
+            border-radius: $btn-border-radius;
+            transition: $nav-link-transition;
+        }
+    }
+}
+
+.offcanvas-dark {
+    @extend .text-bg-dark;
+
+    .offcanvas-header {
+        border-bottom: 1px solid $secondary;
+
+        button {
+            @extend .btn-close-white;
+        }
+    }
+
+    .navbar-nav {
+        a {
+            &.active {
+                @extend .bg-success;
+            }
+            &:hover {
+                @extend .bg-secondary;
+            }
+        }
+    }
+}

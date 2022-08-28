@@ -1,0 +1,7 @@
+@import '..\\src\\style\\base';
+
+.navigation {
+    .navbar-brand {
+        @extend .d-inline-block, .align-top;
+    }
+}

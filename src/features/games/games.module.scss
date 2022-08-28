@@ -1,0 +1,14 @@
+@import '..\\src\\style\\base';
+.games {
+    table {
+        @extend .mt-2;
+
+        th {
+            @extend .text-capitalize;
+        }
+    }
+}
+
+.status {
+    @extend .text-center;
+}
