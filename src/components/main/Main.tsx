@@ -5,7 +5,7 @@ import React from 'react';
 import {Container} from 'react-bootstrap';
 import {Route, Routes} from 'react-router-dom';
 import styles from './main.module.scss';
-import Canvas from 'components/canvas/Canvas';
+import Canvas from 'components/dodge/Dodge';
 
 const Main: React.FC = () => (
     <>
@@ -14,7 +14,7 @@ const Main: React.FC = () => (
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="games" element={<Games />} />
-                <Route path="canvas" element={<Canvas />} />
+                <Route path="dodge" element={<Canvas />} />
             </Routes>
         </Container>
     </>

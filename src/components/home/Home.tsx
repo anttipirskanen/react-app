@@ -6,7 +6,7 @@ const Home: React.FC = () => (
         <ul>
             <li>React</li>
             <li>Redux with Toolkit</li>
-            <li>Bootstrap with React Bootstrap</li>
+            <li>Bootstrap and React Bootstrap</li>
             <li>Component scoped SASS modules</li>
             <li>Webpack 5</li>
         </ul>

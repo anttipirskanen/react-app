@@ -4,7 +4,12 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import styles from './navigation.module.scss';
-import {faHouse, faGamepad, faPaintBrush} from '@fortawesome/free-solid-svg-icons';
+import {
+    faHouse,
+    faGamepad,
+    faPaintBrush,
+    faSquareArrowUpRight
+} from '@fortawesome/free-solid-svg-icons';
 import NavLink from './NavLink';
 
 interface NavigationProps {
@@ -41,7 +46,7 @@ const Navigation: React.FC<NavigationProps> = (props) => (
                     <Nav variant="dark" className="justify-content-end flex-grow-1 pe-3">
                         <NavLink to="/" title="Home" icon={faHouse} />
                         <NavLink to="/games" title="Games" icon={faGamepad} />
-                        <NavLink to="/canvas" title="Canvas" icon={faPaintBrush} />
+                        <NavLink to="/dodge" title="Dodge Game" icon={faSquareArrowUpRight} />
                     </Nav>
                 </Offcanvas.Body>
             </Navbar.Offcanvas>

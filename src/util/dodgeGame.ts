@@ -17,12 +17,12 @@ interface Enemy extends GameObject {
     startY: number;
 }
 
-const refreshRate = 16;
+const refreshRate = 15;
 let gameTime = 0;
 let gameRunning = false;
 const bgColor = '#000000';
 const canvasHeight = 500;
-const canvasWidth = 500;
+var canvasWidth = 500;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -31,21 +31,26 @@ const player: Player = {
     color: '#ff0000',
     width: 15,
     height: 15,
-    x: canvasWidth / 2 - 7,
-    y: canvasHeight / 2 - 7,
+    x: 0,
+    y: 0,
     dragging: false
 };
 
-const enemies: Enemy[] = generateEnemies(6);
+let enemies: Enemy[] = [];
 
+/**
+ * Create enemies with randomly generated staring position, direction, size and speed
+ * @param amount how many enemies should be created
+ * @returns array of created enemis
+ */
 function generateEnemies(amount: number): Enemy[] {
     const enemies = [];
     for (var i = 0; i < amount; i++) {
-        const size = getRandomInt(5, 20);
+        const size = getRandomInt(15, 20);
         const posX = getRandomInt(0, canvasWidth - size);
         const posY = getRandomInt(0, canvasHeight - size);
-        const speedX = getRandomInt(-5, 5);
-        const speedY = getRandomInt(-5, 5);
+        const speedX = getRandomInt(-4, 4);
+        const speedY = getRandomInt(-4, 4);
         const enemy = {
             color: '#596095',
             width: size,
@@ -63,12 +68,25 @@ function generateEnemies(amount: number): Enemy[] {
     return enemies;
 }
 
+/**
+ * Get random integer between given range
+ * @param min
+ * @param max
+ * @returns
+ */
 function getRandomInt(min: number, max: number) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
 }
 
+/**
+ * Clear gameobjects previous location and draw new one to current coordinates
+ * @param obj
+ * @param ctx
+ * @param oldX
+ * @param oldY
+ */
 function drawGameObject(
     obj: GameObject,
     ctx: CanvasRenderingContext2D,
@@ -81,6 +99,13 @@ function drawGameObject(
     ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
 }
 
+/**
+ * Check if mouse coordinates are within gameobjects coordinates
+ * @param mouseX
+ * @param mouseY
+ * @param obj
+ * @returns
+ */
 function mouseOnGameObject(mouseX: number, mouseY: number, obj: GameObject): boolean {
     return (
         mouseX >= obj.x - 10 &&
@@ -110,6 +135,12 @@ function canMoveYAxis(y: number, obj: GameObject): boolean {
     return y >= 0 && y <= canvasHeight - obj.height;
 }
 
+/**
+ * Check if two gameobjects share overlapping coordinates
+ * @param one
+ * @param two
+ * @returns
+ */
 function gameObjectsColliding(one: GameObject, two: GameObject) {
     return (
         one.x + one.width > two.x &&
@@ -138,14 +169,89 @@ function moveEnemy(enemy: Enemy) {
     enemy.y = enemy.y + enemy.moveY;
 }
 
+/**
+ * Draw game time
+ * @param ctx
+ */
+function drawTimer(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(1, 1, 50, 20);
+    ctx.strokeStyle = 'blue';
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'blue';
+    ctx.fillText(Math.floor(gameTime).toString(), 5, 20);
+}
+
+function drawBackground(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+
+/**
+ * Initialize game state set player to starting position and generate new enemies
+ * @param ctx
+ */
+function init(ctx: CanvasRenderingContext2D) {
+    gameRunning = false;
+    player.dragging = false;
+    //initial draw of player
+    player.x = canvasWidth / 2 - player.width;
+    player.y = canvasHeight / 2 - player.height;
+    drawGameObject(player, ctx, player.x, player.y);
+    //create enemies
+    enemies = generateEnemies(canvasWidth / 100);
+}
+
+/**
+ * Generate random number and alter enemies acording to value
+ */
+function generateRandomEvent() {
+    if (gameRunning && gameTime > 10) {
+        const rnd = getRandomInt(0, 1000);
+        //Add new enemy to the game
+        if (rnd > 998) {
+            enemies.push(generateEnemies(1)[0]);
+        }
+        if (rnd < 100) {
+            const idx = getRandomInt(0, enemies.length - 1);
+            const enemy = enemies[idx];
+            if (rnd > 50) {
+                //change enemy properties unexpectedly
+                enemies[idx] = generateEnemies(1)[0];
+                enemies[idx].height = enemy.height;
+                enemies[idx].height = enemy.width;
+                enemies[idx].x = enemy.x;
+                enemies[idx].y = enemy.y;
+            } else {
+                //increase enemy speed
+                if (enemy.moveX > 0) enemy.moveX++;
+                else enemy.moveX--;
+                if (enemy.moveY > 0) enemy.moveY++;
+                else enemy.moveY--;
+            }
+        }
+    }
+}
+
+/**
+ * Run game clock
+ */
+setInterval(() => {
+    if (gameRunning) {
+        gameTime += 1;
+    }
+}, 1000);
+
+/**
+ * Start game, initialize game objects and start main loop and add eventhandlers
+ * @param canvas
+ */
 function start(canvas: HTMLCanvasElement) {
+    canvasWidth = canvas.parentElement.getBoundingClientRect().width;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    //initial draw of player
-    drawGameObject(player, ctx, player.x, player.y);
+    init(ctx);
     onmousedown = (event: MouseEvent) => {
         const rect = canvas.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
@@ -176,9 +282,8 @@ function start(canvas: HTMLCanvasElement) {
             drawGameObject(player, ctx, oldX, oldY);
         }
     };
-    const loop = setInterval(() => {
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    setInterval(() => {
+        drawBackground(ctx);
         enemies.forEach((enemy) => {
             const oldX = enemy.x;
             const oldY = enemy.y;
@@ -187,36 +292,13 @@ function start(canvas: HTMLCanvasElement) {
             }
             drawGameObject(enemy, ctx, oldX, oldY);
             if (gameObjectsColliding(enemy, player)) {
-                gameRunning = false;
-                player.dragging = false;
-
-                let x = player.x;
-                let y = player.y;
-                //reset position
-                player.x = canvasWidth / 2;
-                player.y = canvasWidth / 2;
-                drawGameObject(player, ctx, x, y);
-                enemies.forEach((enemy) => {
-                    x = enemy.x;
-                    y = enemy.y;
-                    enemy.x = enemy.startX;
-                    enemy.y = enemy.startY;
-                    drawGameObject(enemy, ctx, x, y);
-                });
+                init(ctx);
                 return;
             }
         });
         drawGameObject(player, ctx, player.x, player.y);
-
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(1, 1, 50, 20);
-        ctx.strokeStyle = 'blue';
-        ctx.font = '20px Arial';
-        ctx.fillStyle = 'blue';
-        ctx.fillText(Math.floor(gameTime / 1500).toString(), 5, 20);
-        if (gameRunning) {
-            gameTime += refreshRate;
-        }
+        drawTimer(ctx);
+        generateRandomEvent();
     }, refreshRate);
 }
 
