@@ -8,7 +8,8 @@ import {
     faHouse,
     faGamepad,
     faPaintBrush,
-    faSquareArrowUpRight
+    faSquareArrowUpRight,
+    faMap
 } from '@fortawesome/free-solid-svg-icons';
 import NavLink from './NavLink';
 
@@ -47,6 +48,7 @@ const Navigation: React.FC<NavigationProps> = (props) => (
                         <NavLink to="/" title="Home" icon={faHouse} />
                         <NavLink to="/games" title="Games" icon={faGamepad} />
                         <NavLink to="/dodge" title="Dodge Game" icon={faSquareArrowUpRight} />
+                        <NavLink to="/platform" title="Platform Game" icon={faMap} />
                     </Nav>
                 </Offcanvas.Body>
             </Navbar.Offcanvas>
